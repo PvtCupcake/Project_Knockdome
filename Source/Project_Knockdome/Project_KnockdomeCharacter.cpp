@@ -87,6 +87,9 @@ void AProject_KnockdomeCharacter::SetupPlayerInputComponent(class UInputComponen
 	// Bind fire event
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AProject_KnockdomeCharacter::OnFire);
 
+	// Bind ability event
+	PlayerInputComponent->BindAction("UseAbility", IE_Pressed, this, )
+
 	// Bind movement events
 	PlayerInputComponent->BindAxis("MoveForward", this, &AProject_KnockdomeCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AProject_KnockdomeCharacter::MoveRight);
@@ -137,6 +140,11 @@ void AProject_KnockdomeCharacter::OnFire()
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}
 	}
+}
+
+void AProject_KnockdomeCharacter::useAbility()
+{
+
 }
 
 void AProject_KnockdomeCharacter::MoveForward(float Value)

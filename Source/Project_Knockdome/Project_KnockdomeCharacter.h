@@ -76,6 +76,9 @@ protected:
 	/** Fires a projectile. */
 	void OnFire();
 
+	// Uses the knockback ability
+	void useAbility();
+
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);
 
