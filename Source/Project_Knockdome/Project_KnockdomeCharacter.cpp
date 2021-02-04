@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
+#include "Project_Knockdome_Push_Ability.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -88,7 +89,7 @@ void AProject_KnockdomeCharacter::SetupPlayerInputComponent(class UInputComponen
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AProject_KnockdomeCharacter::OnFire);
 
 	// Bind ability event
-	PlayerInputComponent->BindAction("UseAbility", IE_Pressed, this, )
+	PlayerInputComponent->BindAction("UseAbility", IE_Pressed, this, &AProject_KnockdomeCharacter::useAbility);
 
 	// Bind movement events
 	PlayerInputComponent->BindAxis("MoveForward", this, &AProject_KnockdomeCharacter::MoveForward);
@@ -144,7 +145,23 @@ void AProject_KnockdomeCharacter::OnFire()
 
 void AProject_KnockdomeCharacter::useAbility()
 {
+	if (AbilityClass != nullptr)
+	{
+		UWorld* const World = GetWorld();
+		if (World != nullptr)
+		{
+			const FRotator spawnRot = GetControlRotation();
+			// The pushability projectile should also spawn at the muzzle so it does not hit out character
+			const FVector spawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + spawnRot.RotateVector(GunOffset);
 
+			// Set spawn parameters
+			FActorSpawnParameters ActorSpawnParams;
+			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+			// Spawn projectile
+			World->SpawnActor<AProject_Knockdome_Push_Ability>(AbilityClass, spawnLocation, spawnRot, ActorSpawnParams);
+		}
+	}
 }
 
 void AProject_KnockdomeCharacter::MoveForward(float Value)

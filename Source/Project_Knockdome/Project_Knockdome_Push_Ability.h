@@ -6,11 +6,22 @@
 #include "GameFramework/Actor.h"
 #include "Project_Knockdome_Push_Ability.generated.h"
 
-UCLASS()
-class PROJECT_KNOCKDOME_API AProject_Knockdome_Push_Ability : public AActor
+class UBoxComponent;
+class UProjectileMovementComponent;
+
+UCLASS(config=Game)
+class AProject_Knockdome_Push_Ability : public AActor
 {
 	GENERATED_BODY()
-	
+
+	// Sphere collision component
+	UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
+	UBoxComponent* CollisionComp;
+
+	// Projectile movement component
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	UProjectileMovementComponent* ProjectileMovement;
+
 public:	
 	// Sets default values for this actor's properties
 	AProject_Knockdome_Push_Ability();
