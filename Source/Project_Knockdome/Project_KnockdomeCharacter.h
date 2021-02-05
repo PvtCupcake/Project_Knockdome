@@ -76,7 +76,13 @@ public:
 	USkeletalMeshComponent* FP_Gun;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		int playerIndex;
+	int playerIndex;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Damage)
+	float playerDamage;
+
+	UPROPERTY(EditAnywhere, Category = Projectile)
+	AActor* baseProjectile;
 
 protected:
 	
@@ -114,6 +120,9 @@ public:
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
+
+	UFUNCTION(BlueprintCallable, Category = Hits)
+	void OnHit(FVector enemyVelocity);
 
 };
 

@@ -104,6 +104,19 @@ void AProject_KnockdomeCharacter::SetupPlayerInputComponent(class UInputComponen
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AProject_KnockdomeCharacter::LookUpAtRate);
 }
 
+void AProject_KnockdomeCharacter::OnHit(FVector enemyVelocity)
+{
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Character onHit started"));
+
+		playerDamage += 0.1f;
+
+		FVector launchVelocity = enemyVelocity;
+		launchVelocity = launchVelocity * playerDamage;
+		launchVelocity = launchVelocity + FVector(0.f, 0.f, 500.0f);
+		this->LaunchCharacter(launchVelocity, false, false);
+}
+
 void AProject_KnockdomeCharacter::OnFire()
 {
 	// try and fire a projectile
