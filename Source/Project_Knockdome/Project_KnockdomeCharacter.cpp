@@ -147,7 +147,7 @@ void AProject_KnockdomeCharacter::OnFire()
 				// spawn the projectile at the muzzle
 				World->SpawnActor<AProject_KnockdomeProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 
-				abilityCharge += 1;
+				abilityCharge += 0.2f;
 		}
 	}
 
@@ -171,7 +171,7 @@ void AProject_KnockdomeCharacter::OnFire()
 
 void AProject_KnockdomeCharacter::useAbility()
 {
-	if (abilityCharge >= 5)
+	if (abilityCharge >= 1.0f)
 	{
 		if (AbilityClass != nullptr)
 		{
@@ -190,7 +190,7 @@ void AProject_KnockdomeCharacter::useAbility()
 				World->SpawnActor<AProject_Knockdome_Push_Ability>(AbilityClass, spawnLocation, spawnRot, ActorSpawnParams);
 				
 				// Reset abilityCharge
-				abilityCharge = 0;
+				abilityCharge = 0.f;
 			}
 		}
 	}

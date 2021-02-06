@@ -84,6 +84,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = Projectile)
 	AActor* baseProjectile;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	float abilityCharge{ 0.f };
+
 protected:
 	
 	/** Fires a projectile. */
@@ -126,9 +129,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Hits)
 	void onAbilityHit(FVector enemyVelocity);
-
-private:
-	int abilityCharge{ 0 };
 
 };
 
