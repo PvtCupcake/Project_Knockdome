@@ -124,5 +124,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Hits)
 	void OnHit(FVector enemyVelocity);
 
+	UFUNCTION(BlueprintCallable, Category = Hits)
+	void onAbilityHit(FVector enemyVelocity);
+
+private:
+	int abilityCharge{ 0 };
+
 };
 

@@ -106,15 +106,26 @@ void AProject_KnockdomeCharacter::SetupPlayerInputComponent(class UInputComponen
 
 void AProject_KnockdomeCharacter::OnHit(FVector enemyVelocity)
 {
-		if (GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Character onHit started"));
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Character onHit started"));
 
-		playerDamage += 0.1f;
+	playerDamage += 0.1f;
 
-		FVector launchVelocity = enemyVelocity;
-		launchVelocity = launchVelocity * playerDamage;
-		launchVelocity = launchVelocity + FVector(0.f, 0.f, 500.0f);
-		this->LaunchCharacter(launchVelocity, false, false);
+	FVector launchVelocity = enemyVelocity;
+	launchVelocity = launchVelocity * playerDamage;
+	launchVelocity = launchVelocity + FVector(0.f, 0.f, 500.0f);
+	this->LaunchCharacter(launchVelocity, false, false);
+}
+
+void AProject_KnockdomeCharacter::onAbilityHit(FVector enemyVelocity)
+{
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Character onAbilityHit started"));
+
+	FVector launchVelocity = enemyVelocity;
+	launchVelocity = launchVelocity * (playerDamage * 2);
+	launchVelocity = launchVelocity + FVector(0.f, 0.f, 500.0f);
+	this->LaunchCharacter(launchVelocity, false, false);
 }
 
 void AProject_KnockdomeCharacter::OnFire()
@@ -135,6 +146,8 @@ void AProject_KnockdomeCharacter::OnFire()
 
 				// spawn the projectile at the muzzle
 				World->SpawnActor<AProject_KnockdomeProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+
+				abilityCharge += 1;
 		}
 	}
 
@@ -158,21 +171,27 @@ void AProject_KnockdomeCharacter::OnFire()
 
 void AProject_KnockdomeCharacter::useAbility()
 {
-	if (AbilityClass != nullptr)
+	if (abilityCharge >= 5)
 	{
-		UWorld* const World = GetWorld();
-		if (World != nullptr)
+		if (AbilityClass != nullptr)
 		{
-			const FRotator spawnRot = GetControlRotation();
-			// The pushability projectile should also spawn at the muzzle so it does not hit out character
-			const FVector spawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + spawnRot.RotateVector(GunOffset);
+			UWorld* const World = GetWorld();
+			if (World != nullptr)
+			{
+				const FRotator spawnRot = GetControlRotation();
+				// The pushability projectile should also spawn at the muzzle so it does not hit out character
+				const FVector spawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + spawnRot.RotateVector(GunOffset);
 
-			// Set spawn parameters
-			FActorSpawnParameters ActorSpawnParams;
-			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+				// Set spawn parameters
+				FActorSpawnParameters ActorSpawnParams;
+				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
-			// Spawn projectile
-			World->SpawnActor<AProject_Knockdome_Push_Ability>(AbilityClass, spawnLocation, spawnRot, ActorSpawnParams);
+				// Spawn projectile
+				World->SpawnActor<AProject_Knockdome_Push_Ability>(AbilityClass, spawnLocation, spawnRot, ActorSpawnParams);
+				
+				// Reset abilityCharge
+				abilityCharge = 0;
+			}
 		}
 	}
 }
