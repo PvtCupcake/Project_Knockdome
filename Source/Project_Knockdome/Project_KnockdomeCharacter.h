@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Components/SphereComponent.h"
+#include "Animation/SkeletalMeshActor.h"
+#include "PickUp.h"
 #include "Project_KnockdomeCharacter.generated.h"
 
 class UInputComponent;
@@ -71,6 +74,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		int playerIndex;
 
+
 protected:
 	
 	/** Fires a projectile. */
@@ -105,5 +109,13 @@ public:
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+private:
+	void Interact();
+
+	UPROPERTY(EditAnywhere, Category = "PickUp", meta = (AllowPrivateAcess = true))
+		USphereComponent* PickUpRange;
+
+	UPROPERTY(EditAnywhere, Category = "PickUp")
+		ASkeletalMeshActor* wielded;
 };
 
