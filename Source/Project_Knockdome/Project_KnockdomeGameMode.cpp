@@ -13,5 +13,5 @@ AProject_KnockdomeGameMode::AProject_KnockdomeGameMode()
 	DefaultPawnClass = PlayerPawnClassFinder.Class;
 
 	// use our custom HUD class
-	HUDClass = AProject_KnockdomeHUD::StaticClass();
+	//HUDClass = AProject_KnockdomeHUD::StaticClass();
 }
