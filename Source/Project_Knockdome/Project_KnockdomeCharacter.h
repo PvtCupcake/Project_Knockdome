@@ -4,9 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Components/SphereComponent.h"
-#include "Animation/SkeletalMeshActor.h"
-#include "PickUp.h"
+//#include "Project_Knockdome_Push_Ability.h"
 #include "Project_KnockdomeCharacter.generated.h"
 
 class UInputComponent;
@@ -55,6 +53,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category=Projectile)
 	TSubclassOf<class AProject_KnockdomeProjectile> ProjectileClass;
 
+	// Ability class to spawn
+	UPROPERTY(EditAnywhere, Category = Projectile)
+	UClass* AbilityClass;
+	//TSubclassOf<class AProject_Knockdome_Push_Ability> AbilityClass;
+	//AProject_Knockdome_Push_Ability *AbilityClass;
+
 	/** Sound to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
 	USoundBase* FireSound;
@@ -72,13 +76,24 @@ public:
 	USkeletalMeshComponent* FP_Gun;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		int playerIndex;
+	int playerIndex;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Damage)
+	float playerDamage;
+
+	UPROPERTY(EditAnywhere, Category = Projectile)
+	AActor* baseProjectile;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	float abilityCharge{ 0.f };
 
 protected:
 	
 	/** Fires a projectile. */
 	void OnFire();
+
+	// Uses the knockback ability
+	void useAbility();
 
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);
@@ -109,13 +124,11 @@ public:
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
-private:
-	void Interact();
+	UFUNCTION(BlueprintCallable, Category = Hits)
+	void OnHit(FVector enemyVelocity);
 
-	UPROPERTY(EditAnywhere, Category = "PickUp", meta = (AllowPrivateAcess = true))
-		USphereComponent* PickUpRange;
+	UFUNCTION(BlueprintCallable, Category = Hits)
+	void onAbilityHit(FVector enemyVelocity);
 
-	UPROPERTY(EditAnywhere, Category = "PickUp")
-		ASkeletalMeshActor* wielded;
 };
 

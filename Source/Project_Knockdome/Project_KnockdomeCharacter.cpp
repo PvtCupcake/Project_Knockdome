@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
+#include "Project_Knockdome_Push_Ability.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -87,6 +88,9 @@ void AProject_KnockdomeCharacter::SetupPlayerInputComponent(class UInputComponen
 	// Bind fire event
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AProject_KnockdomeCharacter::OnFire);
 
+	// Bind ability event
+	PlayerInputComponent->BindAction("UseAbility", IE_Pressed, this, &AProject_KnockdomeCharacter::useAbility);
+
 	// Bind movement events
 	PlayerInputComponent->BindAxis("MoveForward", this, &AProject_KnockdomeCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AProject_KnockdomeCharacter::MoveRight);
@@ -98,6 +102,30 @@ void AProject_KnockdomeCharacter::SetupPlayerInputComponent(class UInputComponen
 	PlayerInputComponent->BindAxis("TurnRate", this, &AProject_KnockdomeCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AProject_KnockdomeCharacter::LookUpAtRate);
+}
+
+void AProject_KnockdomeCharacter::OnHit(FVector enemyVelocity)
+{
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Character onHit started"));
+
+	playerDamage += 0.1f;
+
+	FVector launchVelocity = enemyVelocity;
+	launchVelocity = launchVelocity * playerDamage;
+	launchVelocity = launchVelocity + FVector(0.f, 0.f, 500.0f);
+	this->LaunchCharacter(launchVelocity, false, false);
+}
+
+void AProject_KnockdomeCharacter::onAbilityHit(FVector enemyVelocity)
+{
+	if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Character onAbilityHit started"));
+
+	FVector launchVelocity = enemyVelocity;
+	launchVelocity = launchVelocity * (playerDamage * 2);
+	launchVelocity = launchVelocity + FVector(0.f, 0.f, 500.0f);
+	this->LaunchCharacter(launchVelocity, false, false);
 }
 
 void AProject_KnockdomeCharacter::OnFire()
@@ -118,6 +146,8 @@ void AProject_KnockdomeCharacter::OnFire()
 
 				// spawn the projectile at the muzzle
 				World->SpawnActor<AProject_KnockdomeProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+
+				abilityCharge += 0.2f;
 		}
 	}
 
@@ -135,6 +165,33 @@ void AProject_KnockdomeCharacter::OnFire()
 		if (AnimInstance != nullptr)
 		{
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
+		}
+	}
+}
+
+void AProject_KnockdomeCharacter::useAbility()
+{
+	if (abilityCharge >= 1.0f)
+	{
+		if (AbilityClass != nullptr)
+		{
+			UWorld* const World = GetWorld();
+			if (World != nullptr)
+			{
+				const FRotator spawnRot = GetControlRotation();
+				// The pushability projectile should also spawn at the muzzle so it does not hit out character
+				const FVector spawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + spawnRot.RotateVector(GunOffset);
+
+				// Set spawn parameters
+				FActorSpawnParameters ActorSpawnParams;
+				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+				// Spawn projectile
+				World->SpawnActor<AProject_Knockdome_Push_Ability>(AbilityClass, spawnLocation, spawnRot, ActorSpawnParams);
+				
+				// Reset abilityCharge
+				abilityCharge = 0.f;
+			}
 		}
 	}
 }
