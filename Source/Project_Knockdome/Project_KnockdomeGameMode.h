@@ -13,6 +13,9 @@ class AProject_KnockdomeGameMode : public AGameModeBase
 
 public:
 	AProject_KnockdomeGameMode();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = players)
+	int maxPlayerCount = 2;
 };
 
 
