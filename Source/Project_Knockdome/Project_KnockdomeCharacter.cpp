@@ -104,12 +104,12 @@ void AProject_KnockdomeCharacter::SetupPlayerInputComponent(class UInputComponen
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AProject_KnockdomeCharacter::LookUpAtRate);
 }
 
-void AProject_KnockdomeCharacter::OnHit(FVector enemyVelocity)
+void AProject_KnockdomeCharacter::OnHit(FVector enemyVelocity, float bulletDamage)
 {
 	if (GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Character onHit started"));
 
-	playerDamage += 0.1f;
+	playerDamage += bulletDamage;
 
 	FVector launchVelocity = enemyVelocity;
 	launchVelocity = launchVelocity * playerDamage;

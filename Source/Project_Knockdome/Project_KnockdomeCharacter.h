@@ -125,7 +125,7 @@ public:
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
 	UFUNCTION(BlueprintCallable, Category = Hits)
-	void OnHit(FVector enemyVelocity);
+	void OnHit(FVector enemyVelocity, float bulletDamage);
 
 	UFUNCTION(BlueprintCallable, Category = Hits)
 	void onAbilityHit(FVector enemyVelocity);

@@ -22,9 +22,15 @@ class AProject_KnockdomeProjectile : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;
 
+	
+
 public:
 	AProject_KnockdomeProjectile();
 
+	// Holds the amount of damage the projectile should do to the player
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Damage)
+	float bulletDamage{ 0.f };
+	
 	/** called when projectile hits something */
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
