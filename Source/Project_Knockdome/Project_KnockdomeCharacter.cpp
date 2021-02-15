@@ -128,6 +128,11 @@ void AProject_KnockdomeCharacter::onAbilityHit(FVector enemyVelocity)
 	this->LaunchCharacter(launchVelocity, false, false);
 }
 
+void AProject_KnockdomeCharacter::ChangeWeapon()
+{
+	//Set ammo
+}
+
 void AProject_KnockdomeCharacter::OnFire()
 {
 	// try and fire a projectile

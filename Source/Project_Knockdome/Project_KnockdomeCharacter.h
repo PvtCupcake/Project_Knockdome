@@ -50,7 +50,7 @@ public:
 	FVector GunOffset;
 
 	/** Projectile class to spawn */
-	UPROPERTY(EditDefaultsOnly, Category=Projectile)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category=Projectile)
 	TSubclassOf<class AProject_KnockdomeProjectile> ProjectileClass;
 
 	// Ability class to spawn
@@ -75,14 +75,14 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = Mesh)
 	USkeletalMeshComponent* FP_Gun;
 
+	UPROPERTY(BlueprintReadWrite, Category = Gameplay)
+	int weaponIndex;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	int playerIndex;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Damage)
 	float playerDamage;
-
-	UPROPERTY(EditAnywhere, Category = Projectile)
-	AActor* baseProjectile;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	float abilityCharge{ 0.f };
@@ -130,5 +130,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Hits)
 	void onAbilityHit(FVector enemyVelocity);
 
+	UFUNCTION(BlueprintCallable, Category = Gameplay)
+		void ChangeWeapon();
 };
 
