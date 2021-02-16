@@ -11,6 +11,10 @@ APickUp::APickUp()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	PitchValue = 0.f;
+	YawValue = 0.5f;
+	RollValue = 0.f;
+
 	PickUpRoot = CreateDefaultSubobject<USceneComponent>(TEXT("PickUpRoot"));
 	RootComponent = PickUpRoot;
 
@@ -37,6 +41,12 @@ void APickUp::BeginPlay()
 void APickUp::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	FRotator NewRotation = FRotator(PitchValue, YawValue, RollValue);
+
+	FQuat QuatRotation = FQuat(NewRotation);
+
+	AddActorLocalRotation(QuatRotation, false, 0, ETeleportType::None);
 
 }
 
