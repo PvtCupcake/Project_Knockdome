@@ -20,15 +20,11 @@ class AProject_KnockdomeCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-	
-
-	/** Location on gun mesh where projectiles should spawn. */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	USceneComponent* FP_MuzzleLocation;
-
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCameraComponent;
+
+	int shotgunAmmo{ 5 };
 
 public:
 	AProject_KnockdomeCharacter();
@@ -37,6 +33,10 @@ protected:
 	virtual void BeginPlay();
 
 public:
+	/** Location on gun mesh where projectiles should spawn. */
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Mesh)
+	USceneComponent* FP_MuzzleLocation;
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
@@ -53,11 +53,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category=Projectile)
 	TSubclassOf<class AProject_KnockdomeProjectile> ProjectileClass;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Projectile)
+	TSubclassOf<class AProject_KnockdomeProjectile> shotgunProjectileClass;
+
 	// Ability class to spawn
 	UPROPERTY(EditAnywhere, Category = Projectile)
 	UClass* AbilityClass;
-	//TSubclassOf<class AProject_Knockdome_Push_Ability> AbilityClass;
-	//AProject_Knockdome_Push_Ability *AbilityClass;
 
 	/** Sound to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
