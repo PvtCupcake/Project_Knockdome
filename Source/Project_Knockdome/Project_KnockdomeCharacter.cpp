@@ -114,7 +114,7 @@ void AProject_KnockdomeCharacter::OnHit(FVector enemyVelocity, float bulletDamag
 
 	FVector launchVelocity = enemyVelocity;
 	launchVelocity = launchVelocity * playerDamage;
-	launchVelocity = launchVelocity + FVector(0.f, 0.f, 500.0f);
+	launchVelocity = launchVelocity + FVector(0.f, 0.f, 300.0f);
 	this->LaunchCharacter(launchVelocity, false, false);
 }
 
@@ -125,7 +125,7 @@ void AProject_KnockdomeCharacter::onAbilityHit(FVector enemyVelocity)
 
 	FVector launchVelocity = enemyVelocity;
 	launchVelocity = launchVelocity * (playerDamage * 2);
-	launchVelocity = launchVelocity + FVector(0.f, 0.f, 500.0f);
+	launchVelocity = launchVelocity + FVector(0.f, 0.f, 300.0f);
 	this->LaunchCharacter(launchVelocity, false, false);
 }
 
