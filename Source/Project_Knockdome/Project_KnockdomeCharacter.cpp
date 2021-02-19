@@ -142,30 +142,49 @@ void AProject_KnockdomeCharacter::OnFire()
 		UWorld* const World = GetWorld();
 		if (World != nullptr)
 		{
-			if (weaponIndex == 3)
+			if (ammoCount > 0)
 			{
-				if (shotgunAmmo > 0)				// The shotgunBow shoots shotgun pellets while the shotgun has ammo
+				if (weaponIndex == 3)
 				{
-					for (int i{ 0 }; i < 7; i++)
+					if (shotgunAmmo > 0)				// The shotgunBow shoots shotgun pellets while the shotgun has ammo
 					{
-						FMath tempMath;
-						FVector coneDirection = GetActorForwardVector();
-						float coneHalfAngle = 5.f;													// Changes the spread of the shotgun, represents the radius of the circle
-						float coneHalfAngleRad = tempMath.DegreesToRadians(coneHalfAngle);
-						FVector randomCone = tempMath.VRandCone(coneDirection, coneHalfAngleRad);	// Sets a random vector within the given cone as the velocity for the shotgun pellets
+						for (int i{ 0 }; i < 7; i++)
+						{
+							FMath tempMath;
+							FVector coneDirection = GetActorForwardVector();
+							float coneHalfAngle = 5.f;													// Changes the spread of the shotgun, represents the radius of the circle
+							float coneHalfAngleRad = tempMath.DegreesToRadians(coneHalfAngle);
+							FVector randomCone = tempMath.VRandCone(coneDirection, coneHalfAngleRad);	// Sets a random vector within the given cone as the velocity for the shotgun pellets
 
-						const FRotator spawnRotation = randomCone.Rotation();
-						const FVector spawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + spawnRotation.RotateVector(GunOffset);
+							const FRotator spawnRotation = randomCone.Rotation();
+							const FVector spawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + spawnRotation.RotateVector(GunOffset);
+							FActorSpawnParameters ActorSpawnParams;
+							ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+							World->SpawnActor<AProject_KnockdomeProjectile>(ProjectileClass, spawnLocation, spawnRotation, ActorSpawnParams);
+
+
+						}
+						shotgunAmmo--;
+					}
+					// When the shotgun is out of ammo the shotgunBow shoots the shotgun as a projectile instead
+					else
+					{
+						const FRotator SpawnRotation = GetControlRotation();
+						// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+						const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+
+						//Set Spawn Collision Handling Override
 						FActorSpawnParameters ActorSpawnParams;
 						ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
-						World->SpawnActor<AProject_KnockdomeProjectile>(ProjectileClass, spawnLocation, spawnRotation, ActorSpawnParams);
+						// spawn the projectile at the muzzle
+						World->SpawnActor<AProject_KnockdomeProjectile>(shotgunProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 
-						
+						shotgunAmmo = 5;
 					}
-					shotgunAmmo --;
 				}
-				// When the shotgun is out of ammo the shotgunBow shoots the shotgun as a projectile instead
+
 				else
 				{
 					const FRotator SpawnRotation = GetControlRotation();
@@ -177,12 +196,12 @@ void AProject_KnockdomeCharacter::OnFire()
 					ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 					// spawn the projectile at the muzzle
-					World->SpawnActor<AProject_KnockdomeProjectile>(shotgunProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-					
-					shotgunAmmo = 5;
-				}
-			}
+					World->SpawnActor<AProject_KnockdomeProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 
+
+				}
+				ammoCount--;
+			}
 			else
 			{
 				const FRotator SpawnRotation = GetControlRotation();
@@ -194,9 +213,7 @@ void AProject_KnockdomeCharacter::OnFire()
 				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 				// spawn the projectile at the muzzle
-				World->SpawnActor<AProject_KnockdomeProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-
-				
+				World->SpawnActor<AProject_KnockdomeProjectile>(peaShooterProjectile, SpawnLocation, SpawnRotation, ActorSpawnParams);
 			}
 			abilityCharge += 0.2f;
 		}

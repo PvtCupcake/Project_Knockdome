@@ -56,6 +56,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Projectile)
 	TSubclassOf<class AProject_KnockdomeProjectile> shotgunProjectileClass;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Projectile)
+	TSubclassOf<class AProject_KnockdomeProjectile> peaShooterProjectile;
+
 	// Ability class to spawn
 	UPROPERTY(EditAnywhere, Category = Projectile)
 	UClass* AbilityClass;
@@ -78,6 +81,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category = Gameplay)
 	int weaponIndex;
+
+	UPROPERTY(BlueprintReadWrite, Category = Gameplay)
+	int ammoCount{ 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	int playerIndex;
