@@ -32,6 +32,27 @@ public:
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* PickUpHitBox;
 
+	// declare our float variables 
+	UPROPERTY(EditAnywhere, Category = "PickUp Config")
+		float PitchValue;
+
+	UPROPERTY(EditAnywhere, Category = "PickUp Config")
+		float YawValue;
+
+	UPROPERTY(EditAnywhere, Category = "PickUp Config")
+		float RollValue;
+
+	float RunningTime;
+
+	UPROPERTY(EditAnywhere, Category = "PickUp Config")
+		float XValue;
+
+	UPROPERTY(EditAnywhere, Category = "PickUp Config")
+		float YValue;
+
+	UPROPERTY(EditAnywhere, Category = "PickUp Config")
+		float ZValue;
+
 	UFUNCTION()
 		void OnPlayerEnterPickUpItem(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };
