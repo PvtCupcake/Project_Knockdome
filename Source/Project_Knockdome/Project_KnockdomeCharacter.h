@@ -20,11 +20,13 @@ class AProject_KnockdomeCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-	/** First person camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* FirstPersonCameraComponent;
+		/** First person camera */
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		UCameraComponent* FirstPersonCameraComponent;
 
 	int shotgunAmmo{ 5 };
+
+	
 
 public:
 	AProject_KnockdomeCharacter();
@@ -84,6 +86,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category = Gameplay)
 	int ammoCount{ 0 };
+	
+	UPROPERTY(BlueprintReadWrite, Category = Gameplay)
+	bool canFire{ true };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	int playerIndex;
@@ -96,8 +101,7 @@ public:
 
 protected:
 	
-	/** Fires a projectile. */
-	void OnFire();
+	
 
 	// Uses the knockback ability
 	void useAbility();
@@ -139,5 +143,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Gameplay)
 		void ChangeWeapon();
+	
+	/** Fires a projectile. */
+	UFUNCTION(BlueprintCallable, Category = Gameplay)
+	void OnFire();
 };
 
