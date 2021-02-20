@@ -107,9 +107,6 @@ void AProject_KnockdomeCharacter::SetupPlayerInputComponent(class UInputComponen
 
 void AProject_KnockdomeCharacter::OnHit(FVector enemyVelocity, float bulletDamage)
 {
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Character onHit started"));
-
 	playerDamage += bulletDamage;
 
 	FVector launchVelocity = enemyVelocity;
@@ -120,9 +117,6 @@ void AProject_KnockdomeCharacter::OnHit(FVector enemyVelocity, float bulletDamag
 
 void AProject_KnockdomeCharacter::onAbilityHit(FVector enemyVelocity)
 {
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Character onAbilityHit started"));
-
 	FVector launchVelocity = enemyVelocity;
 	launchVelocity = launchVelocity * (playerDamage * 2);
 	launchVelocity = launchVelocity + FVector(0.f, 0.f, 300.0f);
@@ -142,7 +136,6 @@ void AProject_KnockdomeCharacter::OnFire()
 		UWorld* const World = GetWorld();
 		if (World != nullptr)
 		{
-			//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Cyan, FString::Printf(TEXT("CanFire is: %s"), canFire ? TEXT("true") : TEXT("false")));
 			if (canFire == true)
 			{
 				canFire = false;
@@ -166,9 +159,9 @@ void AProject_KnockdomeCharacter::OnFire()
 								FActorSpawnParameters ActorSpawnParams;
 								ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
-								World->SpawnActor<AProject_KnockdomeProjectile>(ProjectileClass, spawnLocation, spawnRotation, ActorSpawnParams);
+								AProject_KnockdomeProjectile* spawnedProjectile = World->SpawnActor<AProject_KnockdomeProjectile>(ProjectileClass, spawnLocation, spawnRotation, ActorSpawnParams);
 
-
+								spawnedProjectile->projectilePlayerIndex = playerIndex;
 							}
 							shotgunAmmo--;
 						}
@@ -184,8 +177,9 @@ void AProject_KnockdomeCharacter::OnFire()
 							ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 							// spawn the projectile at the muzzle
-							World->SpawnActor<AProject_KnockdomeProjectile>(shotgunProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-
+							AProject_KnockdomeProjectile* spawnedProjectile = World->SpawnActor<AProject_KnockdomeProjectile>(shotgunProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+							
+							spawnedProjectile->projectilePlayerIndex = playerIndex;
 							shotgunAmmo = 5;
 						}
 					}
@@ -201,9 +195,9 @@ void AProject_KnockdomeCharacter::OnFire()
 						ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 						// spawn the projectile at the muzzle
-						World->SpawnActor<AProject_KnockdomeProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+						AProject_KnockdomeProjectile* spawnedProjectile = World->SpawnActor<AProject_KnockdomeProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 
-
+						spawnedProjectile->projectilePlayerIndex = playerIndex;
 					}
 					ammoCount--;
 				}
@@ -218,9 +212,11 @@ void AProject_KnockdomeCharacter::OnFire()
 					ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 					// spawn the projectile at the muzzle
-					World->SpawnActor<AProject_KnockdomeProjectile>(peaShooterProjectile, SpawnLocation, SpawnRotation, ActorSpawnParams);
+					AProject_KnockdomeProjectile* spawnedProjectile = World->SpawnActor<AProject_KnockdomeProjectile>(peaShooterProjectile, SpawnLocation, SpawnRotation, ActorSpawnParams);
+					
+					spawnedProjectile->projectilePlayerIndex = playerIndex;
 				}
-				abilityCharge += 0.2f;
+
 				// try and play the sound if specified
 				if (FireSound != nullptr)
 				{
