@@ -200,6 +200,8 @@ void AProject_KnockdomeCharacter::OnFire()
 						spawnedProjectile->projectilePlayerIndex = playerIndex;
 					}
 					ammoCount--;
+					if (ammoCount == 0)
+						weaponIndex = 0;
 				}
 				else
 				{
