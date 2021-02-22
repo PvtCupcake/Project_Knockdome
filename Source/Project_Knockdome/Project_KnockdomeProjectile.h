@@ -28,8 +28,11 @@ public:
 	AProject_KnockdomeProjectile();
 
 	// Holds the amount of damage the projectile should do to the player
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Damage)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay)
 	float bulletDamage{ 0.f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay)
+	int projectilePlayerIndex;
 	
 	/** called when projectile hits something */
 	UFUNCTION()

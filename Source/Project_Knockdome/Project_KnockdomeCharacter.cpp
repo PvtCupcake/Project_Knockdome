@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
+#include "Math/UnrealMathUtility.h"
 #include "Project_Knockdome_Push_Ability.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
@@ -106,25 +107,19 @@ void AProject_KnockdomeCharacter::SetupPlayerInputComponent(class UInputComponen
 
 void AProject_KnockdomeCharacter::OnHit(FVector enemyVelocity, float bulletDamage)
 {
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Character onHit started"));
-
 	playerDamage += bulletDamage;
 
 	FVector launchVelocity = enemyVelocity;
 	launchVelocity = launchVelocity * playerDamage;
-	launchVelocity = launchVelocity + FVector(0.f, 0.f, 500.0f);
+	launchVelocity = launchVelocity + FVector(0.f, 0.f, 300.0f);
 	this->LaunchCharacter(launchVelocity, false, false);
 }
 
 void AProject_KnockdomeCharacter::onAbilityHit(FVector enemyVelocity)
 {
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Character onAbilityHit started"));
-
 	FVector launchVelocity = enemyVelocity;
 	launchVelocity = launchVelocity * (playerDamage * 2);
-	launchVelocity = launchVelocity + FVector(0.f, 0.f, 500.0f);
+	launchVelocity = launchVelocity + FVector(0.f, 0.f, 300.0f);
 	this->LaunchCharacter(launchVelocity, false, false);
 }
 
@@ -141,35 +136,106 @@ void AProject_KnockdomeCharacter::OnFire()
 		UWorld* const World = GetWorld();
 		if (World != nullptr)
 		{
-				const FRotator SpawnRotation = GetControlRotation();
-				// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-				const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+			if (canFire == true)
+			{
+				canFire = false;
+				if (ammoCount > 0)
+				{
+					if (weaponIndex == 3)
+					{
+						if (shotgunAmmo > 0)				// The shotgunBow shoots shotgun pellets while the shotgun has ammo
+						{
+							for (int i{ 0 }; i < 7; i++)
+							{
+								FMath tempMath;
+								FVector coneDirection;
+								coneDirection = GetControlRotation().Vector();
+								float coneHalfAngle = 5.f;													// Changes the spread of the shotgun, represents the radius of the circle
+								float coneHalfAngleRad = tempMath.DegreesToRadians(coneHalfAngle);
+								FVector randomCone = tempMath.VRandCone(coneDirection, coneHalfAngleRad);	// Sets a random vector within the given cone as the velocity for the shotgun pellets
 
-				//Set Spawn Collision Handling Override
-				FActorSpawnParameters ActorSpawnParams;
-				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+								const FRotator spawnRotation = randomCone.Rotation(); 
+								const FVector spawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + spawnRotation.RotateVector(GunOffset);
+								FActorSpawnParameters ActorSpawnParams;
+								ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
-				// spawn the projectile at the muzzle
-				World->SpawnActor<AProject_KnockdomeProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+								AProject_KnockdomeProjectile* spawnedProjectile = World->SpawnActor<AProject_KnockdomeProjectile>(ProjectileClass, spawnLocation, spawnRotation, ActorSpawnParams);
 
-				abilityCharge += 0.2f;
-		}
-	}
+								spawnedProjectile->projectilePlayerIndex = playerIndex;
+							}
+							shotgunAmmo--;
+						}
+						// When the shotgun is out of ammo the shotgunBow shoots the shotgun as a projectile instead
+						else
+						{
+							const FRotator SpawnRotation = GetControlRotation();
+							// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+							const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
 
-	// try and play the sound if specified
-	if (FireSound != nullptr)
-	{
-		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-	}
+							//Set Spawn Collision Handling Override
+							FActorSpawnParameters ActorSpawnParams;
+							ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
-	// try and play a firing animation if specified
-	if (FireAnimation != nullptr)
-	{
-		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-		if (AnimInstance != nullptr)
-		{
-			AnimInstance->Montage_Play(FireAnimation, 1.f);
+							// spawn the projectile at the muzzle
+							AProject_KnockdomeProjectile* spawnedProjectile = World->SpawnActor<AProject_KnockdomeProjectile>(shotgunProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+							
+							spawnedProjectile->projectilePlayerIndex = playerIndex;
+							shotgunAmmo = 5;
+						}
+					}
+
+					else
+					{
+						const FRotator SpawnRotation = GetControlRotation();
+						// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+						const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+
+						//Set Spawn Collision Handling Override
+						FActorSpawnParameters ActorSpawnParams;
+						ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+						// spawn the projectile at the muzzle
+						AProject_KnockdomeProjectile* spawnedProjectile = World->SpawnActor<AProject_KnockdomeProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+
+						spawnedProjectile->projectilePlayerIndex = playerIndex;
+					}
+					ammoCount--;
+					if (ammoCount == 0)
+						weaponIndex = 0;
+				}
+				else
+				{
+					const FRotator SpawnRotation = GetControlRotation();
+					// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+					const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+
+					//Set Spawn Collision Handling Override
+					FActorSpawnParameters ActorSpawnParams;
+					ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+					// spawn the projectile at the muzzle
+					AProject_KnockdomeProjectile* spawnedProjectile = World->SpawnActor<AProject_KnockdomeProjectile>(peaShooterProjectile, SpawnLocation, SpawnRotation, ActorSpawnParams);
+					
+					spawnedProjectile->projectilePlayerIndex = playerIndex;
+				}
+
+				// try and play the sound if specified
+				if (FireSound != nullptr)
+				{
+					UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+				}
+
+				// try and play a firing animation if specified
+				if (FireAnimation != nullptr)
+				{
+					// Get the animation object for the arms mesh
+					UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+					if (AnimInstance != nullptr)
+					{
+						AnimInstance->Montage_Play(FireAnimation, 1.f);
+					}
+				}
+			}
 		}
 	}
 }
