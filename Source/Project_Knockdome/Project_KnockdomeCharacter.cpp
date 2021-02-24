@@ -161,6 +161,7 @@ void AProject_KnockdomeCharacter::OnFire()
 
 								AProject_KnockdomeProjectile* spawnedProjectile = World->SpawnActor<AProject_KnockdomeProjectile>(ProjectileClass, spawnLocation, spawnRotation, ActorSpawnParams);
 
+								if (spawnedProjectile != nullptr)
 								spawnedProjectile->projectilePlayerIndex = playerIndex;
 							}
 							shotgunAmmo--;
@@ -179,6 +180,7 @@ void AProject_KnockdomeCharacter::OnFire()
 							// spawn the projectile at the muzzle
 							AProject_KnockdomeProjectile* spawnedProjectile = World->SpawnActor<AProject_KnockdomeProjectile>(shotgunProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 							
+							if (spawnedProjectile != nullptr)
 							spawnedProjectile->projectilePlayerIndex = playerIndex;
 							shotgunAmmo = 5;
 						}
@@ -197,6 +199,7 @@ void AProject_KnockdomeCharacter::OnFire()
 						// spawn the projectile at the muzzle
 						AProject_KnockdomeProjectile* spawnedProjectile = World->SpawnActor<AProject_KnockdomeProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 
+						if (spawnedProjectile != nullptr)
 						spawnedProjectile->projectilePlayerIndex = playerIndex;
 					}
 					ammoCount--;
@@ -216,6 +219,7 @@ void AProject_KnockdomeCharacter::OnFire()
 					// spawn the projectile at the muzzle
 					AProject_KnockdomeProjectile* spawnedProjectile = World->SpawnActor<AProject_KnockdomeProjectile>(peaShooterProjectile, SpawnLocation, SpawnRotation, ActorSpawnParams);
 					
+					if (spawnedProjectile != nullptr)
 					spawnedProjectile->projectilePlayerIndex = playerIndex;
 				}
 
