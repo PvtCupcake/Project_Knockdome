@@ -184,6 +184,22 @@ void AProject_KnockdomeCharacter::OnFire()
 						}
 					}
 
+					if (weaponIndex == 1)
+					{
+						const FRotator SpawnRotation = GetControlRotation();
+						// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+						const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+
+						//Set Spawn Collision Handling Override
+						FActorSpawnParameters ActorSpawnParams;
+						ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+						// spawn the projectile at the muzzle
+						AProject_KnockdomeProjectile* spawnedProjectile = World->SpawnActor<AProject_KnockdomeProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+
+						spawnedProjectile->projectilePlayerIndex = playerIndex;
+					}
+
 					else
 					{
 						const FRotator SpawnRotation = GetControlRotation();
