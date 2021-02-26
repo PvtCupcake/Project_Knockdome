@@ -24,13 +24,13 @@ APickUp::APickUp()
 	RootComponent = PickUpRoot;
 
 	PickUpMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PickUpMesh"));
-	PickUpMesh->AttachToComponent(PickUpRoot, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	
 
 	PickUpHitBox = CreateDefaultSubobject<UBoxComponent>(TEXT("PickUpItem"));
 	PickUpHitBox->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
 	PickUpHitBox->SetGenerateOverlapEvents(true);
 	PickUpHitBox->OnComponentBeginOverlap.AddDynamic(this, &APickUp::OnPlayerEnterPickUpItem);
-	PickUpHitBox->AttachToComponent(PickUpRoot, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	
 
 
 }
@@ -39,7 +39,9 @@ APickUp::APickUp()
 void APickUp::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	PickUpMesh->AttachToComponent(PickUpRoot, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	PickUpHitBox->AttachToComponent(PickUpRoot, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 }
 
 // Called every frame
