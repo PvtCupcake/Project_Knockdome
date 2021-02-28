@@ -99,9 +99,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	float abilityCharge{ 0.f };
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	int playerScore{ 0 };
-
 protected:
 	
 	
