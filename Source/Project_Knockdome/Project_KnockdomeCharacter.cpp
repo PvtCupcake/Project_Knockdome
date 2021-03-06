@@ -194,6 +194,7 @@ void AProject_KnockdomeCharacter::OnFire()
 						// spawn the projectile at the muzzle
 						AProject_KnockdomeProjectile* spawnedProjectile = World->SpawnActor<AProject_KnockdomeProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 
+						if (spawnedProjectile != nullptr)
 						spawnedProjectile->projectilePlayerIndex = playerIndex;
 					}
 
