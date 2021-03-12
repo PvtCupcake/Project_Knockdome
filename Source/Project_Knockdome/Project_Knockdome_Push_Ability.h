@@ -26,6 +26,9 @@ public:
 	// Sets default values for this actor's properties
 	AProject_Knockdome_Push_Ability();
 
+	UPROPERTY(BlueprintReadWrite, Category = "Index")
+		int abilityPlayerIndex{ 0 };
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

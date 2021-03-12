@@ -271,11 +271,12 @@ void AProject_KnockdomeCharacter::useAbility()
 
 				// Set spawn parameters
 				FActorSpawnParameters ActorSpawnParams;
-				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 				// Spawn projectile
-				World->SpawnActor<AProject_Knockdome_Push_Ability>(AbilityClass, spawnLocation, spawnRot, ActorSpawnParams);
+				AProject_Knockdome_Push_Ability *ability = World->SpawnActor<AProject_Knockdome_Push_Ability>(AbilityClass, spawnLocation, spawnRot, ActorSpawnParams);
 				
+				ability->abilityPlayerIndex = playerIndex;
 				// Reset abilityCharge
 				abilityCharge = 0.f;
 			}
