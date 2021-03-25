@@ -31,7 +31,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay)
 	float bulletDamage{ 0.f };
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	int projectilePlayerIndex;
 	
 	/** called when projectile hits something */

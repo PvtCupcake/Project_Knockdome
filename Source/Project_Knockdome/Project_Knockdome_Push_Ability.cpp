@@ -32,7 +32,7 @@ AProject_Knockdome_Push_Ability::AProject_Knockdome_Push_Ability()
 	ProjectileMovement->bShouldBounce = false;
 
 	// Die after 1 second by defualt
-	InitialLifeSpan = 1.0f;
+	InitialLifeSpan = 100.0f;
 }
 
 // Called when the game starts or when spawned
