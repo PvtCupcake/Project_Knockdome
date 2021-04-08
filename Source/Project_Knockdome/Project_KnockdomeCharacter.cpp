@@ -107,17 +107,14 @@ void AProject_KnockdomeCharacter::SetupPlayerInputComponent(class UInputComponen
 
 void AProject_KnockdomeCharacter::OnHit(FVector enemyVelocity, float bulletDamage)
 {
+	UE_LOG(LogTemp, Warning, TEXT("The float value is: %f"), bulletDamage);
+	bulletDamage = bulletDamage + bulletBoost;
 	playerDamage += bulletDamage;
 
 	FVector launchVelocity = enemyVelocity;
 	launchVelocity = launchVelocity * playerDamage;
 	launchVelocity = launchVelocity + FVector(0.f, 0.f, 300.0f);
 	this->LaunchCharacter(launchVelocity, false, false);
-
-	if (playerDamage >= 0)
-	{
-		playerDamage = 0;
-	}
 }
 
 void AProject_KnockdomeCharacter::onAbilityHit(FVector enemyVelocity)
@@ -163,6 +160,7 @@ void AProject_KnockdomeCharacter::OnFire()
 
 								if (spawnedProjectile != nullptr)
 								spawnedProjectile->projectilePlayerIndex = playerIndex;
+								spawnedProjectile->bulletDamage += bulletBoost;
 							}
 							shotgunAmmo--;
 						}
