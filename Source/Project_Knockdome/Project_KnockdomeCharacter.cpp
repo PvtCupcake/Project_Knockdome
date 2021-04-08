@@ -160,7 +160,6 @@ void AProject_KnockdomeCharacter::OnFire()
 
 								if (spawnedProjectile != nullptr)
 								spawnedProjectile->projectilePlayerIndex = playerIndex;
-								spawnedProjectile->bulletDamage += bulletBoost;
 							}
 							shotgunAmmo--;
 						}
