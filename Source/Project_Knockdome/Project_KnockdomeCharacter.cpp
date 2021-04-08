@@ -107,6 +107,8 @@ void AProject_KnockdomeCharacter::SetupPlayerInputComponent(class UInputComponen
 
 void AProject_KnockdomeCharacter::OnHit(FVector enemyVelocity, float bulletDamage)
 {
+	UE_LOG(LogTemp, Warning, TEXT("The float value is: %f"), bulletDamage);
+	bulletDamage = bulletDamage + bulletBoost;
 	playerDamage += bulletDamage;
 
 	FVector launchVelocity = enemyVelocity;
