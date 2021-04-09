@@ -183,7 +183,7 @@ void AProject_KnockdomeCharacter::OnFire()
 						}
 					}
 
-					if (weaponIndex == 1)
+					else if (weaponIndex == 1)
 					{
 						const FRotator SpawnRotation = GetControlRotation();
 						// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
