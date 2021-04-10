@@ -23,7 +23,6 @@ void AlaunchPad::BeginPlay()
 void AlaunchPad::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AlaunchPad::launchPlayer(ACharacter *collidingPlayer)
