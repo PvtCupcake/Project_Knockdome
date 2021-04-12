@@ -31,6 +31,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	float bulletDamage{ 0.f };
 
+	// Holds the amount of damage the projectile should do to the player
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	float bulletBoosting{ 0.f };
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	int projectilePlayerIndex;
 	
