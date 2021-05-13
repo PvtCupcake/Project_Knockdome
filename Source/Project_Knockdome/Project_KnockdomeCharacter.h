@@ -144,8 +144,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Hits)
 	void OnHit(FVector enemyVelocity, float bulletDamage);
 
-	UFUNCTION(BlueprintCallable, Category = Hits)
-	void onAbilityHit(FVector enemyVelocity);
+	/*UFUNCTION(BlueprintCallable, Category = Hits)
+	void onAbilityHit(FVector enemyVelocity);*/
 	
 	/** Fires a projectile. */
 	UFUNCTION(BlueprintCallable, Category = Gameplay)
