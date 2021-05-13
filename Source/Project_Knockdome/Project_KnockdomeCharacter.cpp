@@ -117,13 +117,14 @@ void AProject_KnockdomeCharacter::OnHit(FVector enemyVelocity, float bulletDamag
 	this->LaunchCharacter(launchVelocity, false, false);
 }
 
-void AProject_KnockdomeCharacter::onAbilityHit(FVector enemyVelocity)
+// Function used to push character in the old version of the special ability
+/*void AProject_KnockdomeCharacter::onAbilityHit(FVector enemyVelocity)
 {
 	FVector launchVelocity = enemyVelocity;
 	launchVelocity = launchVelocity * (playerDamage * 3);
 	launchVelocity = launchVelocity + FVector(0.f, 0.f, 300.0f);
 	this->LaunchCharacter(launchVelocity, false, false);
-}
+}*/
 
 void AProject_KnockdomeCharacter::OnFire()
 {
