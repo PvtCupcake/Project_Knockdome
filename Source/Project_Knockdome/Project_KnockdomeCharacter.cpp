@@ -161,6 +161,11 @@ void AProject_KnockdomeCharacter::OnFire()
 
 								if (spawnedProjectile != nullptr)
 								spawnedProjectile->projectilePlayerIndex = playerIndex;
+
+								if (FireSound != nullptr)
+								{
+									UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+								}
 							}
 							shotgunAmmo--;
 						}
@@ -181,6 +186,11 @@ void AProject_KnockdomeCharacter::OnFire()
 							if (spawnedProjectile != nullptr)
 							spawnedProjectile->projectilePlayerIndex = playerIndex;
 							shotgunAmmo = 5;
+
+							if (ShotgunSound != nullptr)
+							{
+								UGameplayStatics::PlaySoundAtLocation(this, ShotgunSound, GetActorLocation());
+							}
 						}
 					}
 
@@ -222,7 +232,7 @@ void AProject_KnockdomeCharacter::OnFire()
 				}
 
 				// try and play the sound if specified
-				if (FireSound != nullptr)
+				if (FireSound != nullptr && weaponIndex != 3)
 				{
 					UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
 				}
@@ -265,6 +275,11 @@ void AProject_KnockdomeCharacter::useAbility()
 				ability->abilityPlayerIndex = playerIndex;
 				// Reset abilityCharge
 				abilityCharge = 0.f;
+
+				if (ShieldSound != nullptr)
+				{
+					UGameplayStatics::PlaySoundAtLocation(this, ShieldSound, GetActorLocation());
+				}
 			}
 		}
 	}
